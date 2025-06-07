@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Monster Mayhem</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <h1>Monster Mayhem</h1>
+
+  <!-- Monster Placement Form -->
+  <form id="monsterForm">
+    <input id="username" placeholder="Username" required />
+    <select id="monsterType">
+      <option value="vampire">Vampire</option>
+      <option value="werewolf">Werewolf</option>
+      <option value="ghost">Ghost</option>
+    </select>
+    <input type="number" id="x" placeholder="X (0–9)" min="0" max="9" required />
+    <input type="number" id="y" placeholder="Y (0–9)" min="0" max="9" required />
+    <button type="submit">Place Monster</button>
+  </form>
+
+  <!-- Total Games -->
+  <div id="totalGames" style="text-align: center; margin-top: 20px; color: #ffcc00;">
+    Total games played: 0
+  </div>
+
+  <!-- Game Board -->
+  <div id="gameBoard"></div>
+
+  <!-- Floating Emoji Monsters -->
+  <div class="monster-emoji vampire">🧛‍♂️</div>
+  <div class="monster-emoji ghost">👻</div>
+  <div class="monster-emoji werewolf">🐺</div>
+
+  <!-- Background Music + Mute Button -->
+  <button id="toggleMusic">🔇 Mute Music</button>
+  <audio id="bgMusic" autoplay loop>
+    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+
+  <!-- Socket.IO -->
+  <script src="/socket.io/socket.io.js"></script>
+
+  <!-- Client Script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const socket = io();
+      const form = document.getElementById("monsterForm");
+      const board = document.getElementById("gameBoard");
+      const totalGamesDiv = document.getElementById("totalGames");
+
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const username = document.getElementById("username").value.trim();
+        const monsterType = document.getElementById("monsterType").value;
+        const x = parseInt(document.getElementById("x").value);
+        const y = parseInt(document.getElementById("y").value);
+
+        if (!username || isNaN(x) || isNaN(y)) {
+          alert("Please enter valid username and coordinates.");
+          return;
+        }
+
+        socket.emit("placeMonster", { username, monsterType, x, y });
+      });
+
+      socket.on("boardUpdate", (boardState) => {
+        board.innerHTML = "<h2>Board</h2>";
+        boardState.forEach(row => {
+          board.innerHTML += "<div>" + row.map(cell => `[${cell || ' '}]`).join(" ") + "</div>";
+        });
+      });
+
+      // 🟡 Total Games Listener
+      socket.on('totalGamesUpdate', (count) => {
+        totalGamesDiv.textContent = `Total games played: ${count}`;
+      });
+
+      // 🔊 Music Controls
+      const music = document.getElementById("bgMusic");
+      const toggleBtn = document.getElementById("toggleMusic");
+      let isMuted = false;
+
+      toggleBtn.addEventListener("click", () => {
+        if (music.paused) {
+          music.play();
+          toggleBtn.textContent = "🔇 Mute Music";
+          isMuted = false;
+        } else {
+          music.pause();
+          toggleBtn.textContent = "🔊 Play Music";
+          isMuted = true;
+        }
+      });
+
+      // Fix autoplay
+      window.addEventListener("click", () => {
+        if (!isMuted && music.paused) {
+          music.play().catch(() => {});
+        }
+      }, { once: true });
+    });
+  </script>
+</body>
+</html>

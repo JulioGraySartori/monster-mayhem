@@ -1,0 +1,112 @@
+/* style.css - Halloween Red & Orange Theme */
+
+body {
+  background-color: #0d0d0d;
+  background-image: url('https://www.transparenttextures.com/patterns/dark-mosaic.png');
+  background-size: cover;
+  color: #ff6600;
+  font-family: 'Trebuchet MS', sans-serif;
+  margin: 0;
+  padding: 20px;
+}
+
+h1 {
+  color: #ff1a1a;
+  text-align: center;
+  text-shadow: 2px 2px 6px #000;
+  font-size: 3em;
+}
+
+form {
+  background-color: #1a1a1a;
+  border: 2px solid #ff1a1a;
+  border-radius: 10px;
+  padding: 20px;
+  max-width: 400px;
+  margin: 20px auto;
+  box-shadow: 0 0 20px #ff6600;
+}
+
+input, select, button {
+  width: 100%;
+  margin: 10px 0;
+  padding: 10px;
+  border: 2px solid #ff6600;
+  border-radius: 5px;
+  background-color: #262626;
+  color: #fff;
+  font-size: 1em;
+}
+
+button {
+  background-color: #ff1a1a;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  background-color: #cc0000;
+  box-shadow: 0 0 10px #ff6600;
+}
+
+#gameBoard {
+  text-align: center;
+  margin-top: 40px;
+  font-family: monospace;
+  color: #ffcc00;
+}
+
+#gameBoard div {
+  line-height: 2em;
+}
+
+/* Floating Emoji Monsters */
+.monster-emoji {
+  position: fixed;
+  font-size: 60px;
+  z-index: 999;
+  opacity: 0.8;
+  animation: float 6s infinite ease-in-out;
+  pointer-events: none;
+}
+
+.monster-emoji.vampire {
+  top: 30px;
+  left: 20px;
+}
+
+.monster-emoji.ghost {
+  bottom: 40px;
+  right: 20px;
+}
+
+.monster-emoji.werewolf {
+  top: 40%;
+  left: 90%;
+  transform: translateX(-50%);
+}
+
+@keyframes float {
+  0%   { transform: translateY(0); }
+  50%  { transform: translateY(-15px); }
+  100% { transform: translateY(0); }
+}
+
+/* Mute Button – stays on screen while scrolling */
+#toggleMusic {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 12px 20px;
+  background-color: #ff6600;
+  color: #000;
+  font-weight: bold;
+  border: 2px solid #ff1a1a;
+  border-radius: 10px;
+  cursor: pointer;
+  z-index: 1000;
+}
+
+#toggleMusic:hover {
+  background-color: #ff3300;
+}
